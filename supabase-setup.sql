@@ -46,11 +46,7 @@ BEGIN
     (user1_id, 'media_skills', 800, 5, 5, 10),
     (user1_id, 'portfolio', 250, 2, 1, 10),
     (user2_id, 'digital_confidence', 300, 2, 2, 10),
-    (user3_id, 'media_skills', 1200, 7, 7, 10)
-  ON CONFLICT (user_id, pillar) DO UPDATE
-  SET xp = EXCLUDED.xp,
-      level = EXCLUDED.level,
-      completed_milestones = EXCLUDED.completed_milestones;
+    (user3_id, 'media_skills', 1200, 7, 7, 10);
 
   -- Insert User Badges
   INSERT INTO user_badges (user_id, badge_name, badge_description, badge_icon, tier, pillar, earned_at)
