@@ -61,6 +61,37 @@ app.use((req, res, next) => {
   next();
 });
 
+// Health check endpoint - test environment variables and database
+app.get('/api/health', async (req, res) => {
+  try {
+    const health = {
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      environment: {
+        DATABASE_URL: process.env.DATABASE_URL ? 'SET (length: ' + process.env.DATABASE_URL.length + ')' : 'NOT SET',
+        SESSION_SECRET: process.env.SESSION_SECRET ? 'SET' : 'NOT SET',
+        NODE_ENV: process.env.NODE_ENV || 'development'
+      }
+    };
+
+    // Test database connection
+    if (db) {
+      const result = await db.execute(sql`SELECT 1 as test`);
+      health.database = 'Connected ✓';
+    } else {
+      health.database = 'Not initialized ✗';
+    }
+
+    res.json(health);
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      error: error.message,
+      database: 'Connection failed ✗'
+    });
+  }
+});
+
 // Import all routes from main server
 // Auth endpoints
 app.post('/api/auth/register', async (req, res) => {
