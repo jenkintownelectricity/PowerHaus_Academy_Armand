@@ -1518,8 +1518,13 @@ app.patch('/api/grading-comments/:id/use', async (req, res) => {
   }
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`💎 JewelEE AI Assistant: ${process.env.ANTHROPIC_API_KEY ? 'Enabled' : 'Disabled (add ANTHROPIC_API_KEY)'}`);
-});
+// Start server (only in development, not on Vercel)
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`💎 JewelEE AI Assistant: ${process.env.ANTHROPIC_API_KEY ? 'Enabled' : 'Disabled (add ANTHROPIC_API_KEY)'}`);
+  });
+}
+
+// Export for Vercel serverless
+export default app;
