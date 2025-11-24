@@ -40,25 +40,25 @@ BEGIN
   ON CONFLICT DO NOTHING;
 
   -- Insert Pillar Progress for test users
-  INSERT INTO pillar_progress (user_id, pillar, xp_earned, current_level, milestones_completed)
+  INSERT INTO pillar_progress (user_id, pillar, xp, level, completed_milestones, total_milestones)
   VALUES
-    (user1_id, 'digital_confidence', 450, 3, ARRAY['first_login', 'profile_complete', 'first_video']),
-    (user1_id, 'media_skills', 800, 5, ARRAY['first_upload', 'quality_submission', 'featured_work']),
-    (user1_id, 'portfolio', 250, 2, ARRAY['portfolio_created']),
-    (user2_id, 'digital_confidence', 300, 2, ARRAY['first_login', 'profile_complete']),
-    (user3_id, 'media_skills', 1200, 7, ARRAY['first_upload', 'quality_submission', 'featured_work', 'expert_level'])
+    (user1_id, 'digital_confidence', 450, 3, 3, 10),
+    (user1_id, 'media_skills', 800, 5, 5, 10),
+    (user1_id, 'portfolio', 250, 2, 1, 10),
+    (user2_id, 'digital_confidence', 300, 2, 2, 10),
+    (user3_id, 'media_skills', 1200, 7, 7, 10)
   ON CONFLICT (user_id, pillar) DO UPDATE
-  SET xp_earned = EXCLUDED.xp_earned,
-      current_level = EXCLUDED.current_level,
-      milestones_completed = EXCLUDED.milestones_completed;
+  SET xp = EXCLUDED.xp,
+      level = EXCLUDED.level,
+      completed_milestones = EXCLUDED.completed_milestones;
 
   -- Insert User Badges
-  INSERT INTO user_badges (user_id, badge_name, badge_tier, description, earned_at)
+  INSERT INTO user_badges (user_id, badge_name, badge_description, badge_icon, tier, pillar, earned_at)
   VALUES
-    (user1_id, 'First Steps', 'bronze', 'Completed your first lesson', NOW() - INTERVAL '10 days'),
-    (user1_id, 'Content Creator', 'silver', 'Uploaded 5 quality pieces', NOW() - INTERVAL '5 days'),
-    (user3_id, 'Portfolio Pro', 'gold', 'Built an outstanding portfolio', NOW() - INTERVAL '2 days'),
-    (user3_id, 'Master Creator', 'platinum', 'Achieved mastery in media skills', NOW())
+    (user1_id, 'First Steps', 'Completed your first lesson', '🎯', 'bronze', 'digital_confidence', NOW() - INTERVAL '10 days'),
+    (user1_id, 'Content Creator', 'Uploaded 5 quality pieces', '🎥', 'silver', 'media_skills', NOW() - INTERVAL '5 days'),
+    (user3_id, 'Portfolio Pro', 'Built an outstanding portfolio', '⭐', 'gold', 'portfolio', NOW() - INTERVAL '2 days'),
+    (user3_id, 'Master Creator', 'Achieved mastery in media skills', '🏆', 'platinum', 'media_skills', NOW())
   ON CONFLICT DO NOTHING;
 
   -- Insert Discount Codes (using actual schema columns)
