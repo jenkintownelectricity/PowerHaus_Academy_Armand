@@ -4,48 +4,33 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 217 91% 60%;
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    /* PowerHaus Academy - Award-Winning OLED Black Theme 2025 */
+    /* True OLED Black for 60% battery savings on OLED screens */
+    --background: 0 0% 0%;           /* Pure Black #000000 */
+    --foreground: 0 0% 90%;          /* Silver #E5E5E5 - never pure white */
+    --card: 0 0% 3%;                 /* Near-black #080808 */
+    --card-foreground: 0 0% 90%;     /* Silver text */
+    --popover: 0 0% 3%;
+    --popover-foreground: 0 0% 90%;
+    --primary: 280 100% 70%;         /* Electric Purple #B266FF - PowerHaus brand */
+    --primary-foreground: 0 0% 95%;  /* Off-white */
+    --secondary: 0 0% 10%;           /* Dark gray #1A1A1A */
+    --secondary-foreground: 0 0% 85%; /* Light gray */
+    --muted: 0 0% 8%;                /* Subtle gray #141414 */
+    --muted-foreground: 0 0% 60%;    /* Medium gray */
+    --accent: 160 100% 50%;          /* Electric Cyan #00FFA3 - accent */
+    --accent-foreground: 0 0% 0%;    /* Black on accent */
+    --destructive: 0 100% 50%;       /* Pure Red */
+    --destructive-foreground: 0 0% 95%;
+    --border: 0 0% 15%;              /* Subtle borders */
+    --input: 0 0% 10%;               /* Input backgrounds */
+    --ring: 280 100% 70%;            /* Purple focus ring */
+    --radius: 0.75rem;               /* Rounded corners */
+    --chart-1: 280 100% 70%;         /* Purple */
+    --chart-2: 160 100% 50%;         /* Cyan */
+    --chart-3: 60 100% 50%;          /* Gold */
+    --chart-4: 0 100% 60%;           /* Pink */
+    --chart-5: 200 100% 60%;         /* Blue */
   }
 }
 
@@ -56,6 +41,16 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    /* OLED optimization - true black background */
+    background-color: #000000;
+    color: #E5E5E5;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  /* Smooth font rendering on OLED */
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
@@ -177,31 +172,50 @@
   animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-/* Glassmorphism Effects - 2025 Medical Theme */
+/* PowerHaus Academy - OLED Black Glassmorphism 2025 */
 .glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  background: rgba(20, 20, 20, 0.6);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(178, 102, 255, 0.2);
+  box-shadow:
+    0 8px 32px 0 rgba(178, 102, 255, 0.15),
+    inset 0 1px 0 0 rgba(178, 102, 255, 0.1);
 }
 
 .glass-dark {
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  background: rgba(8, 8, 8, 0.8);
+  backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
+  border: 1px solid rgba(229, 229, 229, 0.1);
+  box-shadow:
+    0 8px 32px 0 rgba(0, 0, 0, 0.8),
+    0 0 20px 0 rgba(178, 102, 255, 0.1);
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(16px) saturate(200%);
-  -webkit-backdrop-filter: blur(16px) saturate(200%);
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(15, 15, 15, 0.7);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  border: 1px solid rgba(178, 102, 255, 0.15);
   box-shadow:
-    0 8px 32px 0 rgba(31, 38, 135, 0.15),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+    0 8px 32px 0 rgba(0, 0, 0, 0.6),
+    0 0 30px 0 rgba(178, 102, 255, 0.1),
+    inset 0 1px 0 0 rgba(229, 229, 229, 0.05);
+}
+
+/* PowerHaus glow effects */
+.powerhaus-glow {
+  box-shadow:
+    0 0 20px rgba(178, 102, 255, 0.4),
+    0 0 40px rgba(178, 102, 255, 0.2),
+    0 0 60px rgba(178, 102, 255, 0.1);
+}
+
+.accent-glow {
+  box-shadow:
+    0 0 20px rgba(0, 255, 163, 0.4),
+    0 0 40px rgba(0, 255, 163, 0.2);
 }
 
 /* Smooth transitions */
@@ -276,24 +290,36 @@
   border-radius: 8px;
 }
 
-/* Medical theme gradients */
-.medical-gradient {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+/* PowerHaus Academy gradients - Award-winning minimalism */
+.powerhaus-gradient {
+  background: linear-gradient(135deg, #B266FF 0%, #00FFA3 100%);
 }
 
-.medical-gradient-soft {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+.powerhaus-gradient-soft {
+  background: linear-gradient(135deg, rgba(178, 102, 255, 0.15) 0%, rgba(0, 255, 163, 0.15) 100%);
 }
 
-.medical-card {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-  border-left: 4px solid #667eea;
-  transition: all 0.3s ease;
+.powerhaus-card {
+  background: linear-gradient(135deg, rgba(178, 102, 255, 0.08) 0%, rgba(0, 255, 163, 0.08) 100%);
+  border-left: 3px solid #B266FF;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.medical-card:hover {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+.powerhaus-card:hover {
+  background: linear-gradient(135deg, rgba(178, 102, 255, 0.15) 0%, rgba(0, 255, 163, 0.15) 100%);
+  box-shadow:
+    0 10px 40px rgba(178, 102, 255, 0.3),
+    0 0 30px rgba(178, 102, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* 6 Pillars gradient */
+.pillar-gradient {
+  background: linear-gradient(180deg,
+    rgba(178, 102, 255, 0.2) 0%,
+    rgba(0, 255, 163, 0.1) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
 }
 
 /* Success/Error states for medical context */

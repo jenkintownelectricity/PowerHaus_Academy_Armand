@@ -1,8 +1,8 @@
 {
-  "name": "spu-lms",
+  "name": "powerhaus-academy",
   "version": "1.0.0",
   "type": "module",
-  "description": "Sterile Processing Universal Learning Management System",
+  "description": "PowerHaus Academy - Elite Fitness & Wellness Learning Platform",
   "scripts": {
     "dev": "node --loader ts-node/esm server/index.ts",
     "build": "vite build",

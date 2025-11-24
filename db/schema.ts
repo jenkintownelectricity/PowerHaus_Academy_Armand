@@ -1,11 +1,14 @@
 import { pgTable, serial, text, timestamp, integer, boolean, jsonb, pgEnum } from 'drizzle-orm/pg-core';
 
-// Enums
-export const userRoleEnum = pgEnum('user_role', ['student', 'teacher', 'alumni', 'admin']);
-export const classTypeEnum = pgEnum('class_type', ['hybrid', 'online', 'hands_on']);
-export const materialCategoryEnum = pgEnum('material_category', ['book_materials', 'hands_on_station']);
-export const discussionCategoryEnum = pgEnum('discussion_category', ['general', 'questions', 'tips', 'alumni']);
-export const blogCategoryEnum = pgEnum('blog_category', ['industry_news', 'tips', 'case_studies', 'student_work']);
+// PowerHaus Academy Enums
+export const userRoleEnum = pgEnum('user_role', ['user', 'coach', 'admin']);
+export const classTypeEnum = pgEnum('class_type', ['group', 'personal', 'online', 'workshop']);
+export const materialCategoryEnum = pgEnum('material_category', ['video', 'workout_plan', 'nutrition_guide', 'educational']);
+export const discussionCategoryEnum = pgEnum('discussion_category', ['general', 'nutrition', 'training', 'mindset', 'community']);
+export const blogCategoryEnum = pgEnum('blog_category', ['fitness_tips', 'nutrition', 'success_stories', 'wellness', 'mindset']);
+export const pillarEnum = pgEnum('pillar', ['strength', 'conditioning', 'mobility', 'nutrition', 'mindset', 'recovery']);
+export const submissionTypeEnum = pgEnum('submission_type', ['photo', 'video', 'measurement']);
+export const badgeTierEnum = pgEnum('badge_tier', ['bronze', 'silver', 'gold', 'platinum', 'diamond']);
 
 // Users Table
 export const users = pgTable('users', {
@@ -14,19 +17,22 @@ export const users = pgTable('users', {
   password: text('password').notNull(),
   firstName: text('first_name').notNull(),
   lastName: text('last_name').notNull(),
-  role: userRoleEnum('role').notNull().default('student'),
+  profilePicture: text('profile_picture'), // Profile picture URL
+  bio: text('bio'),
+  role: userRoleEnum('role').notNull().default('user'),
   stripeCustomerId: text('stripe_customer_id'),
-  extraCreditPoints: integer('extra_credit_points').notNull().default(0),
+  pointsEarned: integer('points_earned').notNull().default(0),
+  currentProgram: integer('current_program'), // References programs table
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
-// Classes Table
+// Classes Table (Fitness Sessions)
 export const classes = pgTable('classes', {
   id: serial('id').primaryKey(),
   title: text('title').notNull(),
   description: text('description').notNull(),
   type: classTypeEnum('type').notNull(),
-  teacherId: integer('teacher_id').references(() => users.id),
+  coachId: integer('coach_id').references(() => users.id),
   capacity: integer('capacity').notNull(),
   enrolled: integer('enrolled').notNull().default(0),
   scheduleDate: timestamp('schedule_date').notNull(),
@@ -35,7 +41,9 @@ export const classes = pgTable('classes', {
   price: integer('price').notNull().default(0), // in cents
   isLive: boolean('is_live').notNull().default(false),
   videoUrl: text('video_url'),
-  studentCount: integer('student_count').notNull().default(0),
+  thumbnailUrl: text('thumbnail_url'),
+  difficulty: text('difficulty').notNull().default('intermediate'), // beginner, intermediate, advanced
+  targetedPillars: pillarEnum('targeted_pillars').array(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
@@ -283,6 +291,95 @@ export const gradingComments = pgTable('grading_comments', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
+// =====================================================
+// POWERHAUS ACADEMY SPECIFIC TABLES
+// =====================================================
+
+// Programs Table (6 Pillars Programs)
+export const programs = pgTable('programs', {
+  id: serial('id').primaryKey(),
+  title: text('title').notNull(),
+  description: text('description').notNull(),
+  duration: integer('duration').notNull(), // in weeks
+  difficulty: text('difficulty').notNull().default('intermediate'),
+  price: integer('price').notNull().default(0), // in cents
+  thumbnailUrl: text('thumbnail_url'),
+  pillarsIncluded: pillarEnum('pillars_included').array().notNull(),
+  isActive: boolean('is_active').notNull().default(true),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+// Pillar Progress Table (Track user progress in 6 Pillars)
+export const pillarProgress = pgTable('pillar_progress', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  pillar: pillarEnum('pillar').notNull(),
+  level: integer('level').notNull().default(1),
+  xp: integer('xp').notNull().default(0),
+  completedMilestones: integer('completed_milestones').notNull().default(0),
+  totalMilestones: integer('total_milestones').notNull().default(10),
+  lastActivityAt: timestamp('last_activity_at').defaultNow(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+// User Badges Table
+export const userBadges = pgTable('user_badges', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  badgeName: text('badge_name').notNull(),
+  badgeDescription: text('badge_description').notNull(),
+  badgeIcon: text('badge_icon').notNull(),
+  tier: badgeTierEnum('tier').notNull().default('bronze'),
+  pillar: pillarEnum('pillar'),
+  earnedAt: timestamp('earned_at').defaultNow().notNull(),
+});
+
+// Media Submissions Table (Photo/Video uploads)
+export const mediaSubmissions = pgTable('media_submissions', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  submissionType: submissionTypeEnum('submission_type').notNull(),
+  fileUrl: text('file_url').notNull(),
+  thumbnailUrl: text('thumbnail_url'),
+  title: text('title').notNull(),
+  description: text('description'),
+  pillar: pillarEnum('pillar'),
+  classId: integer('class_id').references(() => classes.id),
+  isApproved: boolean('is_approved').notNull().default(false),
+  isPublic: boolean('is_public').notNull().default(false),
+  viewCount: integer('view_count').notNull().default(0),
+  likeCount: integer('like_count').notNull().default(0),
+  submittedAt: timestamp('submitted_at').defaultNow().notNull(),
+});
+
+// Discount Codes Table
+export const discountCodes = pgTable('discount_codes', {
+  id: serial('id').primaryKey(),
+  code: text('code').notNull().unique(),
+  description: text('description'),
+  discountType: text('discount_type').notNull(), // percentage, fixed
+  discountValue: integer('discount_value').notNull(), // percentage or cents
+  maxUses: integer('max_uses'),
+  usesCount: integer('uses_count').notNull().default(0),
+  validFrom: timestamp('valid_from').notNull(),
+  validUntil: timestamp('valid_until').notNull(),
+  applicableTo: text('applicable_to').array(), // class IDs, program IDs, or 'all'
+  isActive: boolean('is_active').notNull().default(true),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+// Platform Logo/Branding Table
+export const platformBranding = pgTable('platform_branding', {
+  id: serial('id').primaryKey(),
+  logoUrl: text('logo_url'),
+  faviconUrl: text('favicon_url'),
+  primaryColor: text('primary_color').notNull().default('#B266FF'),
+  secondaryColor: text('secondary_color').notNull().default('#00FFA3'),
+  companyName: text('company_name').notNull().default('PowerHaus Academy'),
+  tagline: text('tagline').notNull().default('Transform Your Power'),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
 // Export types
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
@@ -328,3 +425,17 @@ export type PdfAnnotation = typeof pdfAnnotations.$inferSelect;
 export type NewPdfAnnotation = typeof pdfAnnotations.$inferInsert;
 export type GradingComment = typeof gradingComments.$inferSelect;
 export type NewGradingComment = typeof gradingComments.$inferInsert;
+
+// PowerHaus Academy types
+export type Program = typeof programs.$inferSelect;
+export type NewProgram = typeof programs.$inferInsert;
+export type PillarProgress = typeof pillarProgress.$inferSelect;
+export type NewPillarProgress = typeof pillarProgress.$inferInsert;
+export type UserBadge = typeof userBadges.$inferSelect;
+export type NewUserBadge = typeof userBadges.$inferInsert;
+export type MediaSubmission = typeof mediaSubmissions.$inferSelect;
+export type NewMediaSubmission = typeof mediaSubmissions.$inferInsert;
+export type DiscountCode = typeof discountCodes.$inferSelect;
+export type NewDiscountCode = typeof discountCodes.$inferInsert;
+export type PlatformBranding = typeof platformBranding.$inferSelect;
+export type NewPlatformBranding = typeof platformBranding.$inferInsert;

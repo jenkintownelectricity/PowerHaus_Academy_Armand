@@ -2,6 +2,15 @@ import { useState } from 'react';
 import { Route, Switch } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import Layout from './components/Layout';
+
+// PowerHaus Academy Pages
+import UserDashboard from './pages/UserDashboard';
+import Programs from './pages/Programs';
+import VideoLibrary from './pages/VideoLibrary';
+import PowerHausAdminDashboard from './pages/PowerHausAdminDashboard';
+import LogoUpload from './components/LogoUpload';
+
+// Original LMS Pages (kept for compatibility)
 import Dashboard from './pages/Dashboard';
 import Materials from './pages/Materials';
 import HandsOnStations from './pages/HandsOnStations';
@@ -43,10 +52,11 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="flex items-center justify-center min-h-screen bg-black">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-primary mx-auto mb-4"></div>
-          <p className="text-lg font-medium text-gray-700">Loading SPU LMS...</p>
+          <div className="w-20 h-20 rounded-full border-4 border-purple-500/30 border-t-purple-500 animate-spin mx-auto mb-6"></div>
+          <p className="text-2xl font-bold text-white mb-2">PowerHaus Academy</p>
+          <p className="text-gray-400">Loading your journey...</p>
         </div>
       </div>
     );
@@ -74,7 +84,16 @@ function App() {
     <>
       <Layout user={user}>
         <Switch>
-          <Route path="/" component={Dashboard} />
+          {/* PowerHaus Academy Routes */}
+          <Route path="/" component={UserDashboard} />
+          <Route path="/dashboard" component={UserDashboard} />
+          <Route path="/programs" component={Programs} />
+          <Route path="/videos" component={VideoLibrary} />
+          <Route path="/powerhaus-admin" component={PowerHausAdminDashboard} />
+          <Route path="/branding" component={LogoUpload} />
+
+          {/* Original LMS Routes (for admin/legacy access) */}
+          <Route path="/lms" component={Dashboard} />
           <Route path="/developer" component={DeveloperDashboard} />
           <Route path="/admin" component={AdminDashboard} />
           <Route path="/teacher" component={TeacherDashboard} />
@@ -88,11 +107,23 @@ function App() {
           <Route path="/community/:id" component={DiscussionDetail} />
           <Route path="/blog" component={Blog} />
           <Route path="/blog/:id" component={BlogPost} />
-          <Route>404 - Not Found</Route>
+
+          {/* 404 */}
+          <Route>
+            <div className="min-h-screen bg-black flex items-center justify-center p-6">
+              <div className="text-center">
+                <h1 className="text-9xl font-bold text-purple-500 mb-4">404</h1>
+                <p className="text-2xl text-white mb-8">Page Not Found</p>
+                <a href="/" className="px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-xl inline-block transition-colors">
+                  Return Home
+                </a>
+              </div>
+            </div>
+          </Route>
         </Switch>
       </Layout>
 
-      {/* JewelEE AI Assistant - Available everywhere when logged in */}
+      {/* PowerHaus AI Coach - Available everywhere when logged in */}
       {showAI || !aiMinimized ? (
         <AIAssistant
           onClose={() => setShowAI(false)}
