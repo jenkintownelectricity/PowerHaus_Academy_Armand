@@ -7,7 +7,7 @@
 1. Open your **Supabase Dashboard** → Your Project
 2. Click **SQL Editor** in the left sidebar
 3. Click **"+ New Query"**
-4. Copy the **entire contents** of `drizzle/0000_fantastic_spencer_smythe.sql`
+4. Copy the **entire contents** of `supabase-schema.sql` (from GitHub or your local project)
 5. Paste into the SQL Editor
 6. Click **"Run"** (or press Cmd/Ctrl + Enter)
 7. ✅ You should see: "Success. No rows returned"
