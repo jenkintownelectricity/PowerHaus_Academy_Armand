@@ -3,16 +3,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Avatar } from '@radix-ui/react-avatar';
 import {
   User,
   Trophy,
-  Zap,
-  Heart,
-  Brain,
-  Dumbbell,
-  Wind,
-  Apple,
+  Camera,
+  Lightbulb,
+  Users,
+  Globe,
+  Briefcase,
+  FolderOpen,
   Calendar,
   Play,
   Upload,
@@ -20,17 +19,60 @@ import {
   Award,
   Target,
   Flame,
+  Sparkles,
 } from 'lucide-react';
 import { useState } from 'react';
 
-// 6 Pillars Configuration
+// PowerHaus Academy 6 Pillars - Digital Media & Content Creation
 const PILLARS = [
-  { id: 'strength', name: 'Strength', icon: Dumbbell, color: '#B266FF', gradient: 'from-purple-500 to-purple-700' },
-  { id: 'conditioning', name: 'Conditioning', icon: Zap, color: '#00FFA3', gradient: 'from-cyan-500 to-cyan-700' },
-  { id: 'mobility', name: 'Mobility', icon: Wind, color: '#60A5FA', gradient: 'from-blue-500 to-blue-700' },
-  { id: 'nutrition', name: 'Nutrition', icon: Apple, color: '#34D399', gradient: 'from-green-500 to-green-700' },
-  { id: 'mindset', name: 'Mindset', icon: Brain, color: '#F59E0B', gradient: 'from-amber-500 to-amber-700' },
-  { id: 'recovery', name: 'Recovery', icon: Heart, color: '#EF4444', gradient: 'from-red-500 to-red-700' },
+  {
+    id: 'digital_confidence',
+    name: 'Digital Confidence & Mindset',
+    icon: Sparkles,
+    color: '#B266FF',
+    gradient: 'from-purple-600 to-purple-800',
+    description: 'Identity, self-belief, discipline, creative courage'
+  },
+  {
+    id: 'media_skills',
+    name: 'Media & Content Skills',
+    icon: Camera,
+    color: '#00FFA3',
+    gradient: 'from-cyan-500 to-cyan-700',
+    description: 'Camera work, editing, storytelling, content creation'
+  },
+  {
+    id: 'creative_leadership',
+    name: 'Creative Leadership',
+    icon: Users,
+    color: '#60A5FA',
+    gradient: 'from-blue-500 to-blue-700',
+    description: 'Turning ideas into action, collaboration, speaking'
+  },
+  {
+    id: 'digital_literacy',
+    name: 'Digital Literacy',
+    icon: Globe,
+    color: '#34D399',
+    gradient: 'from-green-500 to-green-700',
+    description: 'Online safety, professionalism, audience understanding'
+  },
+  {
+    id: 'entrepreneurship',
+    name: 'Entrepreneurship Basics',
+    icon: Briefcase,
+    color: '#F59E0B',
+    gradient: 'from-amber-500 to-amber-700',
+    description: 'Creator economy, digital jobs, business mindset'
+  },
+  {
+    id: 'portfolio',
+    name: 'Portfolio Building',
+    icon: FolderOpen,
+    color: '#EF4444',
+    gradient: 'from-red-500 to-red-700',
+    description: 'Creating projects, digital portfolio, showcase work'
+  },
 ];
 
 export default function UserDashboard() {
@@ -82,7 +124,7 @@ export default function UserDashboard() {
     queryFn: async () => {
       const res = await fetch('/api/stats');
       if (!res.ok) return {
-        totalWorkouts: 0,
+        totalProjects: 0,
         weekStreak: 0,
         totalPoints: 0,
         hoursInvested: 0,
@@ -157,10 +199,21 @@ export default function UserDashboard() {
                 Welcome back, {user?.firstName}!
               </h1>
               <p className="text-gray-400 text-lg">
-                Your journey to greatness continues 🔥
+                Your creative journey continues 🎬
               </p>
               {user?.bio && (
                 <p className="text-gray-500 mt-2 max-w-md">{user.bio}</p>
+              )}
+              {user?.portfolioUrl && (
+                <a
+                  href={user.portfolioUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 mt-3 text-cyan-400 hover:text-cyan-300 transition-colors"
+                >
+                  <FolderOpen className="w-4 h-4" />
+                  View My Portfolio →
+                </a>
               )}
             </div>
           </div>
@@ -189,7 +242,7 @@ export default function UserDashboard() {
             Your 6 Pillars Progress
           </h2>
           <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">
-            Transform Your Power
+            Master Digital Media
           </Badge>
         </div>
 
@@ -214,7 +267,7 @@ export default function UserDashboard() {
                       <pillar.icon className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-white font-semibold">{pillar.name}</h3>
+                      <h3 className="text-white font-semibold text-sm">{pillar.name}</h3>
                       <p className="text-xs text-gray-400">Level {progress.level}</p>
                     </div>
                   </div>
@@ -226,6 +279,7 @@ export default function UserDashboard() {
                 <div className="text-xs text-gray-400">
                   {progress.completedMilestones} / {progress.totalMilestones} milestones
                 </div>
+                <p className="text-xs text-gray-500 mt-2 line-clamp-1">{pillar.description}</p>
               </div>
             );
           })}
@@ -332,9 +386,9 @@ export default function UserDashboard() {
       {/* Stats Overview */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="glass-card rounded-xl p-6 text-center powerhaus-card">
-          <TrendingUp className="w-10 h-10 text-purple-500 mx-auto mb-3" />
-          <div className="text-3xl font-bold text-white mb-1">{stats?.totalWorkouts || 0}</div>
-          <div className="text-sm text-gray-400">Total Workouts</div>
+          <FolderOpen className="w-10 h-10 text-purple-500 mx-auto mb-3" />
+          <div className="text-3xl font-bold text-white mb-1">{stats?.totalProjects || 0}</div>
+          <div className="text-sm text-gray-400">Projects Created</div>
         </div>
         <div className="glass-card rounded-xl p-6 text-center powerhaus-card">
           <Calendar className="w-10 h-10 text-cyan-500 mx-auto mb-3" />
@@ -347,9 +401,9 @@ export default function UserDashboard() {
           <div className="text-sm text-gray-400">Badges Earned</div>
         </div>
         <div className="glass-card rounded-xl p-6 text-center powerhaus-card">
-          <Zap className="w-10 h-10 text-orange-500 mx-auto mb-3" />
+          <TrendingUp className="w-10 h-10 text-orange-500 mx-auto mb-3" />
           <div className="text-3xl font-bold text-white mb-1">{stats?.hoursInvested || 0}h</div>
-          <div className="text-sm text-gray-400">Hours Invested</div>
+          <div className="text-sm text-gray-400">Hours Learning</div>
         </div>
       </div>
     </div>

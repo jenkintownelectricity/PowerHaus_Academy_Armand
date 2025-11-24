@@ -1,13 +1,13 @@
 import { pgTable, serial, text, timestamp, integer, boolean, jsonb, pgEnum } from 'drizzle-orm/pg-core';
 
-// PowerHaus Academy Enums
-export const userRoleEnum = pgEnum('user_role', ['user', 'coach', 'admin']);
-export const classTypeEnum = pgEnum('class_type', ['group', 'personal', 'online', 'workshop']);
-export const materialCategoryEnum = pgEnum('material_category', ['video', 'workout_plan', 'nutrition_guide', 'educational']);
-export const discussionCategoryEnum = pgEnum('discussion_category', ['general', 'nutrition', 'training', 'mindset', 'community']);
-export const blogCategoryEnum = pgEnum('blog_category', ['fitness_tips', 'nutrition', 'success_stories', 'wellness', 'mindset']);
-export const pillarEnum = pgEnum('pillar', ['strength', 'conditioning', 'mobility', 'nutrition', 'mindset', 'recovery']);
-export const submissionTypeEnum = pgEnum('submission_type', ['photo', 'video', 'measurement']);
+// PowerHaus Academy Enums - Digital Media & Content Creation
+export const userRoleEnum = pgEnum('user_role', ['student', 'instructor', 'admin']);
+export const classTypeEnum = pgEnum('class_type', ['group', 'one_on_one', 'online', 'workshop']);
+export const materialCategoryEnum = pgEnum('material_category', ['video_tutorial', 'project_template', 'resource_guide', 'educational']);
+export const discussionCategoryEnum = pgEnum('discussion_category', ['general', 'content_creation', 'tech_help', 'portfolio_feedback', 'career_advice']);
+export const blogCategoryEnum = pgEnum('blog_category', ['industry_insights', 'student_success', 'tutorial', 'trends', 'career_tips']);
+export const pillarEnum = pgEnum('pillar', ['digital_confidence', 'media_skills', 'creative_leadership', 'digital_literacy', 'entrepreneurship', 'portfolio']);
+export const submissionTypeEnum = pgEnum('submission_type', ['photo', 'video', 'portfolio_piece', 'project']);
 export const badgeTierEnum = pgEnum('badge_tier', ['bronze', 'silver', 'gold', 'platinum', 'diamond']);
 
 // Users Table
@@ -19,20 +19,21 @@ export const users = pgTable('users', {
   lastName: text('last_name').notNull(),
   profilePicture: text('profile_picture'), // Profile picture URL
   bio: text('bio'),
-  role: userRoleEnum('role').notNull().default('user'),
+  portfolioUrl: text('portfolio_url'), // Student's digital portfolio URL
+  role: userRoleEnum('role').notNull().default('student'),
   stripeCustomerId: text('stripe_customer_id'),
   pointsEarned: integer('points_earned').notNull().default(0),
   currentProgram: integer('current_program'), // References programs table
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
-// Classes Table (Fitness Sessions)
+// Classes Table (Learning Sessions)
 export const classes = pgTable('classes', {
   id: serial('id').primaryKey(),
   title: text('title').notNull(),
   description: text('description').notNull(),
   type: classTypeEnum('type').notNull(),
-  coachId: integer('coach_id').references(() => users.id),
+  instructorId: integer('instructor_id').references(() => users.id),
   capacity: integer('capacity').notNull(),
   enrolled: integer('enrolled').notNull().default(0),
   scheduleDate: timestamp('schedule_date').notNull(),
@@ -42,7 +43,7 @@ export const classes = pgTable('classes', {
   isLive: boolean('is_live').notNull().default(false),
   videoUrl: text('video_url'),
   thumbnailUrl: text('thumbnail_url'),
-  difficulty: text('difficulty').notNull().default('intermediate'), // beginner, intermediate, advanced
+  difficulty: text('difficulty').notNull().default('beginner'), // beginner, intermediate, advanced
   targetedPillars: pillarEnum('targeted_pillars').array(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
@@ -334,7 +335,7 @@ export const userBadges = pgTable('user_badges', {
   earnedAt: timestamp('earned_at').defaultNow().notNull(),
 });
 
-// Media Submissions Table (Photo/Video uploads)
+// Media Submissions Table (Student Work - Photos/Videos/Projects)
 export const mediaSubmissions = pgTable('media_submissions', {
   id: serial('id').primaryKey(),
   userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
@@ -347,8 +348,10 @@ export const mediaSubmissions = pgTable('media_submissions', {
   classId: integer('class_id').references(() => classes.id),
   isApproved: boolean('is_approved').notNull().default(false),
   isPublic: boolean('is_public').notNull().default(false),
+  isFeatured: boolean('is_featured').notNull().default(false), // Featured student work
   viewCount: integer('view_count').notNull().default(0),
   likeCount: integer('like_count').notNull().default(0),
+  instructorFeedback: text('instructor_feedback'), // Feedback from instructor
   submittedAt: timestamp('submitted_at').defaultNow().notNull(),
 });
 
