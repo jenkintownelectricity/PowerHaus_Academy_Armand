@@ -98,13 +98,12 @@ BEGIN
   ON CONFLICT DO NOTHING;
 
   -- Insert Community Discussions (using actual schema columns)
-  INSERT INTO discussions (title, content, category, author_id, tags, is_pinned)
+  INSERT INTO discussions (title, content, category, author_id, tags, has_helpful_answer)
   VALUES
-    ('Introduce Yourself! 👋', 'Welcome to the PowerHaus community! Tell us about your creative journey, what you hope to achieve, and what excites you most about digital media.', 'general', admin_id, ARRAY['welcome', 'introductions'], true),
+    ('Introduce Yourself! 👋', 'Welcome to the PowerHaus community! Tell us about your creative journey, what you hope to achieve, and what excites you most about digital media.', 'general', admin_id, ARRAY['welcome', 'introductions'], false),
     ('Best Camera for Beginners?', 'Looking for camera recommendations for content creation on a budget. What do you all use? Should I start with my phone or invest in a DSLR?', 'tech_help', user1_id, ARRAY['equipment', 'beginner', 'camera'], false),
-    ('Portfolio Review Thread', 'Share your portfolio and get feedback from the community! Post a link and let us know what kind of work you are looking to get hired for.', 'portfolio_feedback', coach_id, ARRAY['portfolio', 'feedback', 'review'], true),
-    ('Editing Software Recommendations', 'What is everyone using for video editing? I am torn between DaVinci Resolve, Premiere Pro, and Final Cut. Pros and cons?', 'tech_help', user2_id, ARRAY['software', 'editing', 'video'], false)
-  ON CONFLICT DO NOTHING;
+    ('Portfolio Review Thread', 'Share your portfolio and get feedback from the community! Post a link and let us know what kind of work you are looking to get hired for.', 'portfolio_feedback', coach_id, ARRAY['portfolio', 'feedback', 'review'], false),
+    ('Editing Software Recommendations', 'What is everyone using for video editing? I am torn between DaVinci Resolve, Premiere Pro, and Final Cut. Pros and cons?', 'tech_help', user2_id, ARRAY['software', 'editing', 'video'], false);
 
 END $$;
 
